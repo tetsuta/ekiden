@@ -30,7 +30,7 @@ data = {}
 
 case mode
 when "input"
-  data_set = [ku,team,Time.now.to_s].join("\t")
+  data_set = [ku,team,Time.now.localtime("+09:00").to_s].join("\t")
 
   File.open($data_file,"a+"){|wfp|
     wfp.puts data_set
@@ -48,7 +48,7 @@ when "get_all_data"
       elems = line.chomp.split("\t")
       r_ku = elems[0]
       r_team = elems[1]
-      r_time = Time.parse(elems[2])
+      r_time = Time.parse(elems[2]).localtime("+09:00")
       if ku == r_ku
         team_time[r_team] = r_time
       end

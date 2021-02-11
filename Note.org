@@ -2,6 +2,7 @@
 ** IP addressではなくホスト名を付ける
 ** 押したボタンの色を戻す
 ** チームごとの差分を出す
+** DONE タイムゾーンの変更
 
 * copy
   cd /Users/tetsu/work/ekiden
