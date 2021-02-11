@@ -25,6 +25,17 @@ $(document).ready(function(){
 	showCurrentTeamResult();
     })
 
+    // ------------------------------
+    // reset all data
+    $('#allreset').on('click', function() {
+    	var parameter = {
+	    mode: "allreset"
+    	};
+    	jQuery.post(server, parameter, function(data) {
+	    $('#feedback_message').html(data.body);
+	    // $(this).css('background','#FFFFFF');
+    	}, "json");
+    })
 
     // ------------------------------
     $('#reloadList').on('click', function() {

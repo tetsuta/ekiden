@@ -33,6 +33,12 @@ div#contents {
     /* padding:10px 0 20px 0; */
 }
 
+div#configpanel {
+    width:99%;
+    margin:0 auto;
+    padding:20px 20px 20px 0px;
+}
+
 
 /* div#result { */
 /* 	margin:0 auto; */

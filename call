@@ -76,6 +76,15 @@ end
 data = {}
 
 case mode
+when "allreset"
+  File.open($data_file,"a+"){|wfp|
+    wfp.puts "___reset___"
+  }
+  data = {
+    "body" => "削除完了"
+  }
+
+
 when "input"
   data_set = [ku,team,Time.now.localtime("+09:00").to_s].join("\t")
 
@@ -92,6 +101,10 @@ when "get_all_data"
   team_time = Hash::new()
   File.open($data_file,"r:UTF-8"){|fp|
     fp.each_line{|line|
+      if line =~ /___reset___/
+        team_time.clear
+        next
+      end
       elems = line.chomp.split("\t")
       r_ku = elems[0]
       r_team = elems[1]
@@ -123,6 +136,10 @@ when "get_team_result"
   ku_time = Hash::new()
   File.open($data_file,"r:UTF-8"){|fp|
     fp.each_line{|line|
+      if line =~ /___reset___/
+        ku_time.clear
+        next
+      end
       elems = line.chomp.split("\t")
       r_ku = elems[0]
       r_team = elems[1]
