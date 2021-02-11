@@ -1,0 +1,77 @@
+#!/usr/bin/ruby
+# coding: utf-8
+
+# data_file = "/home/tetsuta/ekiden/data"
+data_file = "/Users/tetsu/work/ekiden/ekiden/data"
+
+require 'cgi'
+require 'json'
+require 'time'
+
+cgi = CGI.new("html4")
+
+mode = CGI::unescape(cgi['mode'])
+ku = CGI::unescape(cgi['ku'])
+team = CGI::unescape(cgi['team'])
+
+# mode = "input"
+# ku = "ktab1"
+# team = "姶良"
+
+# mode = "get_all_data"
+# ku = "ktab1"
+# team = ""
+
+
+
+if ku=~/ktab([0-9]+)/
+  ku = "#{$1}区"
+end
+
+data = {}
+
+case mode
+when "input"
+  data_set = [ku,team,Time.now.to_s].join("\t")
+
+  File.open(data_file,"a+"){|wfp|
+    wfp.puts data_set
+  }
+
+  data = {
+    "body" => "input: #{data_set}"
+  }
+
+when "get_all_data"
+
+  team_time = Hash::new()
+  File.open(data_file,"r:UTF-8"){|fp|
+    fp.each_line{|line|
+      elems = line.chomp.split("\t")
+      r_ku = elems[0]
+      r_team = elems[1]
+      r_time = Time.parse(elems[2])
+      if ku == r_ku
+        team_time[r_team] = r_time
+      end
+    }
+  }
+
+  buffer = []
+  team_time.keys.sort{|a,b|
+    team_time[a] <=> team_time[b]
+  }.each{|team|
+    buffer.push("#{team}: #{team_time[team].to_s}<br>")
+  }
+
+  data = {
+    "body" => buffer.join("\n")
+  }
+
+end
+
+
+
+buffer = JSON.generate(data)
+cgi.out({"Access-Control-Allow-Origin" => "*",
+          "Content-Type" => "text/plain; charset=UTF-8"}){buffer}

@@ -1,0 +1,15 @@
+Options +ExecCGI
+AddType text/html cgi
+AddHandler cgi-script cgi
+AddType application/x-httpd-cgi .rb .pl
+
+
+<Files "call">
+ForceType application/x-httpd-cgi
+</Files>
+<Files "test.rb">
+ForceType application/x-httpd-cgi
+</Files>
+<Files "test.pl">
+ForceType application/x-httpd-cgi
+</Files>
