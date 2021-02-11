@@ -37,6 +37,23 @@ id2team["ttab10"] = "大島"
 id2team["ttab11"] = "伊佐"
 id2team["ttab12"] = "熊毛"
 
+
+team_list = [
+  "姶良",
+  "鹿児島",
+  "日置",
+  "川薩",
+  "肝属",
+  "川辺",
+  "出水",
+  "曽於",
+  "指宿",
+  "大島",
+  "伊佐",
+  "熊毛"
+]
+
+
 # --------------------------------------------------
 table_header = <<TABLEHEADER
 <table class="table table-striped table-bordered">
@@ -82,6 +99,23 @@ when "allreset"
   }
   data = {
     "body" => "削除完了"
+  }
+
+
+when "start"
+  current_time = Time.now.localtime("+09:00").to_s
+  ku = "スタート"
+
+  File.open($data_file,"a+"){|wfp|
+    wfp.puts "___reset___"
+    team_list.each{|team|
+      data_set = [ku,team,current_time].join("\t")
+      wfp.puts data_set
+    }
+  }
+
+  data = {
+    "body" => "start!"
   }
 
 

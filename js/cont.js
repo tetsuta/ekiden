@@ -38,6 +38,18 @@ $(document).ready(function(){
     })
 
     // ------------------------------
+    // start
+    $('#start').on('click', function() {
+    	var parameter = {
+	    mode: "start"
+    	};
+    	jQuery.post(server, parameter, function(data) {
+	    $('#feedback_message').html(data.body);
+	    // $(this).css('background','#FFFFFF');
+    	}, "json");
+    })
+
+    // ------------------------------
     $('#reloadList').on('click', function() {
 	$('#resultInput').html("");
 	showCurrentList();
