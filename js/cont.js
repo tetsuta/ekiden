@@ -1,6 +1,7 @@
 $(document).ready(function(){
 
-    var server = "http://localhost/ekiden/call";
+    // the following is defined in config.js
+    // var server = "http://localhost/ekiden/call";
     // var server = "http://18.179.8.46/ekiden/call";
 
     var selected_tab = null;

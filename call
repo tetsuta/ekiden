@@ -1,9 +1,7 @@
 #!/usr/bin/ruby
 # coding: utf-8
 
-# data_file = "/home/tetsuta/ekiden/data"
-data_file = "/Users/tetsu/work/ekiden/ekiden/data"
-
+require './config'
 require 'cgi'
 require 'json'
 require 'time'
@@ -34,7 +32,7 @@ case mode
 when "input"
   data_set = [ku,team,Time.now.to_s].join("\t")
 
-  File.open(data_file,"a+"){|wfp|
+  File.open($data_file,"a+"){|wfp|
     wfp.puts data_set
   }
 
@@ -45,7 +43,7 @@ when "input"
 when "get_all_data"
 
   team_time = Hash::new()
-  File.open(data_file,"r:UTF-8"){|fp|
+  File.open($data_file,"r:UTF-8"){|fp|
     fp.each_line{|line|
       elems = line.chomp.split("\t")
       r_ku = elems[0]
