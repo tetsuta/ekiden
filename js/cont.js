@@ -36,6 +36,7 @@ $(document).ready(function(){
     	};
     	jQuery.post(server, parameter, function(data) {
 	    $('#resultInput').html(data.body);
+	    // $(this).css('background','#FFFFFF');
     	}, "json");
 
 
