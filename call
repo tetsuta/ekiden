@@ -77,13 +77,13 @@ TABLEFOOTER
 
 # ------------------------------   
 def sec_print(sec)
-  if sec < 60
+  if sec.abs < 60
     sec_str = "#{sec.to_i}秒"
-  elsif sec < 60*60
+  elsif sec.abs < 60*60
     min = (sec / 60).floor
     sec = (sec % 60).to_i
     sec_str = "#{min}分#{sec}秒"
-  elsif sec < 60*60*24
+  elsif sec.abs < 60*60*24
     hour = (sec / (60*60)).floor
     min = ((sec % (60*60)) / 60).floor
     sec = ((sec % (60*60)) % 60).to_i
