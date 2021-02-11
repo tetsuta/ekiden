@@ -4,16 +4,25 @@ $(document).ready(function(){
     // var server = "http://localhost/ekiden/call";
     // var server = "http://18.179.8.46/ekiden/call";
 
-    var selected_tab = null;
+    var selected_ku = null;
+    var selected_team = null;
     var team = null;
 
     // ------------------------------
-    // set selected_tab variable
+    // set selected_ku variable
     $('.ktab').on('click', function() {
-	selected_tab = $(this).attr('id');
-	//mon("selected:" + selected_tab);
+	selected_ku = $(this).attr('id');
+	//mon("selected:" + selected_ku);
 	showCurrentList();
 	$('#resultInput').html("");
+    })
+
+    // ------------------------------
+    // set selected_ku variable
+    $('.ttab').on('click', function() {
+	selected_team = $(this).attr('id');
+	//mon("selected:" + selected_ku);
+	showCurrentTeamResult();
     })
 
 
@@ -24,14 +33,14 @@ $(document).ready(function(){
     })
 
     // ------------------------------
-    // set selected_tab variable
+    // set selected_ku variable
     $('.team').on('click', function() {
 	team = $(this).data('id');
 	//mon(team);
 
     	var parameter = {
 	    mode: "input",
-    	    ku: selected_tab,
+    	    ku: selected_ku,
 	    team: team
     	};
     	jQuery.post(server, parameter, function(data) {
@@ -44,10 +53,21 @@ $(document).ready(function(){
 
 
     // ------------------------------
+    function showCurrentTeamResult() {
+    	var parameter = {
+	    mode: "get_team_result",
+    	    teamid: selected_team
+    	};
+    	jQuery.post(server, parameter, function(data) {
+	    $('#teamList').html(data.body);
+    	}, "json");
+    }
+
+    // ------------------------------
     function showCurrentList() {
     	var parameter = {
 	    mode: "get_all_data",
-    	    ku: selected_tab
+    	    ku: selected_ku
     	};
     	jQuery.post(server, parameter, function(data) {
 	    $('#currentList').html(data.body);
