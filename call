@@ -23,6 +23,17 @@ teamid = CGI::unescape(cgi['teamid'])
 # mode = "get_team_result"
 # teamid = "ttab1"
 
+# ==================================================
+class EkidenTime
+  attr_reader :ku, :team, :time
+  def initialize(ku, team, time)
+    @ku = ku
+    @team = team
+    @time = time
+  end
+end
+
+# ==================================================
 id2team = Hash::new()
 id2team["ttab1"] = "姶良"
 id2team["ttab2"] = "鹿児島"
@@ -63,17 +74,39 @@ table_footer = <<TABLEFOOTER
 </table>
 TABLEFOOTER
 
-def table_content_ku(index, team, time)
+
+# ------------------------------   
+def sec_print(sec)
+  if sec < 60
+    sec_str = "#{sec.to_i}秒"
+  elsif sec < 60*60
+    min = (sec / 60).floor
+    sec = (sec % 60).to_i
+    sec_str = "#{min}分#{sec}秒"
+  elsif sec < 60*60*24
+    hour = (sec / (60*60)).floor
+    min = ((sec % (60*60)) / 60).floor
+    sec = ((sec % (60*60)) % 60).to_i
+    sec_str = "#{hour}時間#{min}分#{sec}秒"
+  end
+  return sec_str
+end
+
+# ------------------------------
+def table_content_ku(index, team, time, aira_time)
+  diff = sec_print(time - aira_time)
     content = <<CONTENT
 <tr>
   <td>#{index}</td>
   <td>#{team}</td>
+  <td>#{diff}</td>
   <td>#{time.to_s.gsub(/ \+0900$/,"")}</td>
 </tr>
 CONTENT
     return content
 end
 
+# ------------------------------   
 def table_content_team(team, time, diff)
     content = <<CONTENT
 <tr>
@@ -132,11 +165,12 @@ when "input"
 
 when "get_all_data"
 
-  team_time = Hash::new()
+  data_list = []    
+  aira_time = nil
   File.open($data_file,"r:UTF-8"){|fp|
     fp.each_line{|line|
       if line =~ /___reset___/
-        team_time.clear
+        data_list.clear
         next
       end
       elems = line.chomp.split("\t")
@@ -144,21 +178,34 @@ when "get_all_data"
       r_team = elems[1]
       r_time = Time.parse(elems[2]).localtime("+09:00")
       if ku == r_ku
-        team_time[r_team] = r_time
+        data_list.push(EkidenTime.new(r_ku, r_team, r_time))
+        if r_team == "姶良"
+          aira_time = r_time
+        end
       end
     }
   }
 
-
   buffer = ""
   index = 1
   buffer << table_header
-  team_time.keys.sort{|a,b|
-    team_time[a] <=> team_time[b]
-  }.each{|team|
-    buffer << table_content_ku(index, team, team_time[team])
+
+  buffer << <<CONTENT
+<tr>
+  <td><順位></td>
+  <td><チーム></td>
+  <td><タイム差></td>
+  <td><通過時刻></td>
+</tr>
+CONTENT
+
+  data_list.sort{|a,b|
+    a.time <=> b.time
+  }.each{|score|
+    buffer << table_content_ku(index, score.team, score.time, aira_time)
     index += 1
   }
+
   buffer << table_footer
 
   data = {
@@ -195,18 +242,7 @@ when "get_team_result"
       diff = "-"
     else
       diff_sec = ku_time[ku] - prev
-      if diff_sec < 60
-        diff = "#{diff_sec.to_i}秒"
-      elsif diff_sec < 60*60
-        min = (diff_sec / 60).floor
-        sec = (diff_sec % 60).to_i
-        diff = "#{min}分#{sec}秒"
-      elsif diff_sec < 60*60*24
-        hour = (diff_sec / 60*24).floor
-        min = ((diff_sec % 60*24) / 60).floor
-        sec = ((diff_sec % 60*24) % 60).to_i
-        diff = "#{hour}時間#{min}分#{sec}秒"
-      end
+      diff = sec_print(diff_sec)
     end
     prev = ku_time[ku]
     buffer << table_content_team(ku, ku_time[ku], diff)
