@@ -1,0 +1,16 @@
+
+* todo
+** IP addressではなくホスト名を付ける
+** 押したボタンの色を戻す
+** チームごとの差分を出す
+
+* copy
+  cd /Users/tetsu/work/ekiden
+  rsync -auv --delete ekiden/ aws:~/ekiden/
+
+* info
+  https://373news.com/_sports/ekiden/
+
+
+* end
+
