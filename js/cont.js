@@ -94,13 +94,38 @@ $(document).ready(function(){
     	};
     	jQuery.post(server, parameter, function(data) {
 	    $('#currentList').html(data.body);
+	    hilight_button(data.passed);
     	}, "json");
     }
 
     // ------------------------------
     function mon(text) {
-	$('#monitor').text(text);
+	// $('#monitor').text(text);
+
+	var current_monitor = $('#monitor').text();
+	$('#monitor').html(current_monitor + ";;;" + text);
     }
+
+    // ------------------------------
+    function hilight_button(gray_list) {
+	var ku_num = selected_ku.replace("ktab","");
+
+	for(let index=1; index <= 12; index++){
+	    button_name = "#b" + ku_num + "_" + index.toString();
+	    $(button_name).css('background', '#FFFFFF');
+	}
+	for(let i=0; i<gray_list.length; i++){
+	    button_name = "#b" + ku_num + "_" + gray_list[i]
+	    $(button_name).css('background', '#AAAAAA');
+	}
+    }
+
+    // ------------------------------
+    // $('#trialrun').on('click', function() {
+    // 	var button_name = ".team" + "1" + "_" + "姶良"
+    // 	// $('.team1').css('background', '#AAAAAA');
+    // 	// $(button_name).css('background', '#AAAAAA');
+    // })
 
 
     // ------------------------------

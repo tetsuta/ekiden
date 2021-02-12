@@ -18,7 +18,7 @@ teamid = CGI::unescape(cgi['teamid'])
 # team = "姶良"
 
 # mode = "get_all_data"
-# ku = "ktab1"
+# ku = "ktab3"
 
 # mode = "get_team_result"
 # teamid = "ttab1"
@@ -48,6 +48,19 @@ id2team["ttab10"] = "大島"
 id2team["ttab11"] = "伊佐"
 id2team["ttab12"] = "熊毛"
 
+team2index = Hash::new()
+team2index["姶良"] = "1"
+team2index["鹿児島"] = "2"
+team2index["日置"] = "3"
+team2index["川薩"] = "4"
+team2index["肝属"] = "5"
+team2index["川辺"] = "6"
+team2index["出水"] = "7"
+team2index["曽於"] = "8"
+team2index["指宿"] = "9"
+team2index["大島"] = "10"
+team2index["伊佐"] = "11"
+team2index["熊毛"] = "12"
 
 team_list = [
   "姶良",
@@ -165,12 +178,15 @@ when "input"
 
 when "get_all_data"
 
+  passed = Hash::new()
   data_list = []    
   aira_time = nil
   File.open($data_file,"r:UTF-8"){|fp|
     fp.each_line{|line|
       if line =~ /___reset___/
         data_list.clear
+        passed.clear
+        aira_time = nil
         next
       end
       elems = line.chomp.split("\t")
@@ -182,9 +198,13 @@ when "get_all_data"
         if r_team == "姶良"
           aira_time = r_time
         end
+        passed[team2index[r_team]] = 1
       end
     }
   }
+  if aira_time == nil
+    aira_time = data_list.map{|a| a.time}.max
+  end
 
   buffer = ""
   index = 1
@@ -209,7 +229,8 @@ CONTENT
   buffer << table_footer
 
   data = {
-    "body" => buffer
+    "body" => buffer,
+    "passed" => passed.keys
   }
 
 when "get_team_result"
