@@ -1,13 +1,13 @@
 * todo
 ** 1〜5日目のページを作る
-** データを編集できるようにする
-*** チーム名の変更
-*** 間違って押した場合に消したい
 ** N区Mkm地点を先に決めておき入力したい
 
 
 ** IP addressではなくホスト名を付ける
 ** 押したボタンの色を戻す
+** DONE データを編集できるようにする
+*** チーム名の変更
+*** 間違って押した場合に消したい
 ** DONE すでに通過したチームは色を変える
 ** DONE 区を指定したら姶良との差を見たい
 ** DONE スタートの入力
@@ -22,6 +22,9 @@
 
 * info
   https://373news.com/_sports/ekiden/
+
+  modal
+  https://webdesignday.jp/inspiration/technique/css/4680
 
 
 * end

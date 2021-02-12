@@ -277,12 +277,60 @@
 
 	<div id="feedback_message"></div>
 
+
+	<!-- modal -->
+	<div class="modal js-modal">
+          <div class="modal__bg js-modal-close"></div>
+          <div class="modal__content">
+	    <div class="editarea">
+	      チーム名の修正
+	      <div class="dropdown">
+		<button id="editteam" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+		<ul class="dropdown-menu">
+		  <li><button class="dropdown-item" value="姶良"  >姶良  </button></li>
+		  <li><button class="dropdown-item" value="鹿児島">鹿児島</button></li>
+		  <li><button class="dropdown-item" value="日置"  >日置  </button></li>
+		  <li><button class="dropdown-item" value="川薩"  >川薩  </button></li>
+		  <li><button class="dropdown-item" value="肝属"  >肝属  </button></li>
+		  <li><button class="dropdown-item" value="川辺"  >川辺  </button></li>
+		  <li><button class="dropdown-item" value="出水"  >出水  </button></li>
+		  <li><button class="dropdown-item" value="曽於"  >曽於  </button></li>
+		  <li><button class="dropdown-item" value="指宿"  >指宿  </button></li>
+		  <li><button class="dropdown-item" value="大島"  >大島  </button></li>
+		  <li><button class="dropdown-item" value="伊佐"  >伊佐  </button></li>
+		  <li><button class="dropdown-item" value="熊毛"  >熊毛  </button></li>
+		</ul>
+		<button id="edit_name_button" type="button" class="btn btn-danger">修正実行</button>
+	      </div>
+	    </div>
+
+	    <div class="editarea">
+	      タイムの修正
+	      <div class="input-group">
+		<input id="edittime" type="text" class="form-control">
+		<button id="edit_time_button" type="button" class="btn btn-danger">修正実行</button>
+	      </div>
+	    </div>
+
+	    <div class="editarea">
+	      削除
+	      <div>
+		<button id="delete_button" type="button" class="btn btn-danger">削除実行</button>
+	      </div>
+	    </div>
+
+	    <div class="editarea">
+              <a class="js-modal-close" href="">閉じる</a>
+	    </div>
+          </div><!--modal__inner-->
+	</div><!--modal-->
+
+
 	<!-- Monitor -->
 	<div id="monitor">
 	</div>
 
-	<button id="trialrun" type="button" class="btn btn-default">trial</button>
-
+	<!-- <button id="trialrun" type="button" class="btn btn-default">trial</button> -->
 
       </div>
       <!--end contents-->

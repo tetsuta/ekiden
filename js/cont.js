@@ -7,6 +7,66 @@ $(document).ready(function(){
     var selected_ku = null;
     var selected_team = null;
     var team = null;
+    var edit_target_key = null;
+
+
+    // ------------------------------
+    // modal
+    $('.js-modal-open').on('click',function(){
+        $('.js-modal').fadeIn();
+        return false;
+    });
+    $('.js-modal-close').on('click',function(){
+        $('.js-modal').fadeOut();
+        return false;
+    });
+
+
+    // ------------------------------
+    $('#edit_name_button').on('click', function() {
+	var team = $('#editteam').text();
+    	var parameter = {
+	    mode: "edit_name",
+	    team: team,
+	    key: edit_target_key
+    	};
+    	jQuery.post(server, parameter, function(data) {
+	    $('#feedback_message').html(data.body);
+	    $('.js-modal').fadeOut();
+	    showCurrentList();
+    	}, "json");
+    })
+
+
+    // ------------------------------
+    $('#edit_time_button').on('click', function() {
+	var time = $('#edittime').val();
+    	var parameter = {
+	    mode: "edit_time",
+	    time: time,
+	    key: edit_target_key
+    	};
+    	jQuery.post(server, parameter, function(data) {
+	    $('#feedback_message').html(data.body);
+	    $('.js-modal').fadeOut();
+	    showCurrentList();
+    	}, "json");
+    })
+
+
+    // ------------------------------
+    $('#delete_button').on('click', function() {
+    	var parameter = {
+	    mode: "delete_data",
+	    key: edit_target_key
+    	};
+    	jQuery.post(server, parameter, function(data) {
+	    $('#feedback_message').html(data.body);
+	    $('.js-modal').fadeOut();
+	    showCurrentList();
+    	}, "json");
+    })
+
 
     // ------------------------------
     // set selected_ku variable
@@ -68,7 +128,6 @@ $(document).ready(function(){
     	};
     	jQuery.post(server, parameter, function(data) {
 	    $('#resultInput').html(data.body);
-	    // $(this).css('background','#FFFFFF');
     	}, "json");
 
 
@@ -95,7 +154,40 @@ $(document).ready(function(){
     	jQuery.post(server, parameter, function(data) {
 	    $('#currentList').html(data.body);
 	    hilight_button(data.passed);
+	    setupEditButton();
+	    $('#feedback_message').html("");
     	}, "json");
+    }
+
+    // ------------------------------
+    $('.dropdown-menu .dropdown-item').click(function(){
+	$('#editteam').text($(this).attr('value'));
+    });
+
+
+    // ------------------------------
+    function setupEditButton() {
+	$('.editbutton').on('click', function() {
+	    edit_target_key = $(this).data('id');
+
+	    var key_list = edit_target_key.split(/__/)
+	    var teamname = key_list[0];
+	    var time = key_list[1];
+
+	    $('#editteam').text(teamname);
+	    $('#edittime').val(time);
+            $('.js-modal').fadeIn();
+            // return false;
+
+
+    	    // var parameter = {
+	    // 	mode: "delete",
+    	    // 	key: key
+    	    // };
+    	    // jQuery.post(server, parameter, function(data) {
+	    // 	$('#currentList').html(data.body);
+    	    // }, "json");
+	})
     }
 
     // ------------------------------

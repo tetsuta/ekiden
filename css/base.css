@@ -39,6 +39,46 @@ div.configpanel {
     padding:20px 20px 20px 0px;
 }
 
+div.editarea {
+    background:#EEEEEE;
+    padding:10px 10px 10px 10px;
+    margin:5px 5px 5px 5px; 
+}
+
+#edittime{
+    width:200px;
+}
+
+.modal{
+    display: none;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    width: 100%;
+}
+.modal__bg{
+    background: rgba(0,0,0,0.8);
+    height: 100vh;
+    position: absolute;
+    width: 100%;
+}
+.modal__content{
+    background: #fff;
+    left: 10%;
+    padding: 40px;
+    position: absolute;
+    top: 10%;
+    width: 80%;
+
+    /* background: #fff; */
+    /* left: 50%; */
+    /* padding: 40px; */
+    /* position: absolute; */
+    /* top: 50%; */
+    /* transform: translate(-50%,-50%); */
+    /* width: 60%; */
+}
+
 
 /* div#result { */
 /* 	margin:0 auto; */

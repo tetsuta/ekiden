@@ -9,16 +9,29 @@ require 'time'
 cgi = CGI.new("html4")
 
 mode = CGI::unescape(cgi['mode'])
-ku = CGI::unescape(cgi['ku'])
-team = CGI::unescape(cgi['team'])
+input_ku = CGI::unescape(cgi['ku'])
+input_team = CGI::unescape(cgi['team'])
+input_time = CGI::unescape(cgi['time'])
 teamid = CGI::unescape(cgi['teamid'])
+input_key = CGI::unescape(cgi['key'])
+
+# mode = "delete_data"
+# input_key = "姶良__2021-02-11 23:11:38"
+
+# mode = "edit_name"
+# input_key = "姶良__2021-02-11 23:11:38"
+# input_team = "鹿児島"
+
+# mode = "edit_time"
+# input_key = "姶良__2021-02-11 23:11:38"
+# input_time = "2021-02-11 23:11:40"
 
 # mode = "input"
-# ku = "ktab1"
-# team = "姶良"
+# input_ku = "ktab1"
+# input_team = "姶良"
 
 # mode = "get_all_data"
-# ku = "ktab3"
+# input_ku = "ktab1"
 
 # mode = "get_team_result"
 # teamid = "ttab1"
@@ -108,12 +121,14 @@ end
 # ------------------------------
 def table_content_ku(index, team, time, aira_time)
   diff = sec_print(time - aira_time)
-    content = <<CONTENT
+  key = "#{team}__#{time.to_s.gsub(/ \+0900$/,"")}"
+  content = <<CONTENT
 <tr>
   <td>#{index}</td>
   <td>#{team}</td>
   <td>#{diff}</td>
   <td>#{time.to_s.gsub(/ \+0900$/,"")}</td>
+  <td><button data-id=\"#{key}\" type=\"button\" class=\"editbutton btn btn-danger\">修正</button></td>
 </tr>
 CONTENT
     return content
@@ -132,8 +147,8 @@ CONTENT
 end
 
 # --------------------------------------------------
-if ku=~/ktab([0-9]+)/
-  ku = "#{$1}区"
+if input_ku=~/ktab([0-9]+)/
+  input_ku = "#{$1}区"
 end
 
 data = {}
@@ -166,7 +181,7 @@ when "start"
 
 
 when "input"
-  data_set = [ku,team,Time.now.localtime("+09:00").to_s].join("\t")
+  data_set = [input_ku, input_team, Time.now.localtime("+09:00").to_s].join("\t")
 
   File.open($data_file,"a+"){|wfp|
     wfp.puts data_set
@@ -176,16 +191,16 @@ when "input"
     "body" => "input: #{data_set}"
   }
 
-when "get_all_data"
 
+when "get_all_data"
   passed = Hash::new()
   data_list = []    
   aira_time = nil
   File.open($data_file,"r:UTF-8"){|fp|
     fp.each_line{|line|
       if line =~ /___reset___/
-        data_list.clear
         passed.clear
+        data_list.clear
         aira_time = nil
         next
       end
@@ -193,7 +208,7 @@ when "get_all_data"
       r_ku = elems[0]
       r_team = elems[1]
       r_time = Time.parse(elems[2]).localtime("+09:00")
-      if ku == r_ku
+      if input_ku == r_ku
         data_list.push(EkidenTime.new(r_ku, r_team, r_time))
         if r_team == "姶良"
           aira_time = r_time
@@ -212,10 +227,11 @@ when "get_all_data"
 
   buffer << <<CONTENT
 <tr>
-  <td><順位></td>
-  <td><チーム></td>
-  <td><タイム差></td>
-  <td><通過時刻></td>
+  <td>【順位】</td>
+  <td>【チーム】</td>
+  <td>【タイム差】</td>
+  <td>【通過時刻】</td>
+  <td>【編集】</td>
 </tr>
 CONTENT
 
@@ -233,8 +249,8 @@ CONTENT
     "passed" => passed.keys
   }
 
-when "get_team_result"
 
+when "get_team_result"
   ku_time = Hash::new()
   File.open($data_file,"r:UTF-8"){|fp|
     fp.each_line{|line|
@@ -274,7 +290,92 @@ when "get_team_result"
   data = {
     "body" => buffer
   }
+
+
+when "edit_name"
+  all_lines = []
+  output_lines = []
+  File.open($data_file,"r:UTF-8"){|fp|
+    fp.each_line{|line|
+      all_lines.push(line.chomp)
+    }
+  }
+
+  check_key = input_key.sub("__","\t")
+  all_lines.reverse.each{|line|
+    if line =~ /#{check_key}/
+      elems = line.split("\t")
+      elems[1] = input_team
+      output_lines.push(elems.join("\t"))
+    else
+      output_lines.push(line)
+    end
+  }
+
+  File.open($data_file,"w"){|wfp|
+    wfp.puts(output_lines.reverse.join("\n"))
+  }
+
+  data = {
+    "body" => "修正完了"
+  }
+
+
+when "edit_time"
+  all_lines = []
+  output_lines = []
+  File.open($data_file,"r:UTF-8"){|fp|
+    fp.each_line{|line|
+      all_lines.push(line.chomp)
+    }
+  }
+
+  check_key = input_key.sub("__","\t")
+  all_lines.reverse.each{|line|
+    if line =~ /#{check_key}/
+      elems = line.split("\t")
+      elems[2] = input_time + " +0900"
+      output_lines.push(elems.join("\t"))
+    else
+      output_lines.push(line)
+    end
+  }
+
+  File.open($data_file,"w"){|wfp|
+    wfp.puts(output_lines.reverse.join("\n"))
+  }
+
+  data = {
+    "body" => "修正完了"
+  }
+
+when "delete_data"
+  all_lines = []
+  output_lines = []
+  File.open($data_file,"r:UTF-8"){|fp|
+    fp.each_line{|line|
+      all_lines.push(line.chomp)
+    }
+  }
+
+  check_key = input_key.sub("__","\t")
+  all_lines.reverse.each{|line|
+    unless line =~ /#{check_key}/
+      output_lines.push(line)
+    end
+  }
+
+  File.open($data_file,"w"){|wfp|
+    wfp.puts(output_lines.reverse.join("\n"))
+  }
+
+  data = {
+    "body" => "削除完了"
+  }
+
 end
+
+
 
 
 
